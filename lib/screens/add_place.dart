@@ -33,6 +33,7 @@ class NewPlaceState extends ConsumerState<AddPlaceScreen> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text('Add New Place'),
       ),
@@ -41,6 +42,7 @@ class NewPlaceState extends ConsumerState<AddPlaceScreen> {
         child: Form(
           key: _formKey,
           child: Column(
+            mainAxisSize: MainAxisSize.max,
             children: [
               TextFormField(
                 maxLength: 50,
