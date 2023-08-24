@@ -1,19 +1,20 @@
 import 'package:favorite_places_sergio/models/place.dart';
 import 'package:favorite_places_sergio/providers/favorite_places_provider.dart';
+import 'package:favorite_places_sergio/widgets/image_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
 const uuid = Uuid();
 
-class NewPlace extends ConsumerStatefulWidget {
-  const NewPlace({Key? key}) : super(key: key);
+class AddPlaceScreen extends ConsumerStatefulWidget {
+  const AddPlaceScreen({Key? key}) : super(key: key);
 
   @override
   NewPlaceState createState() => NewPlaceState();
 }
 
-class NewPlaceState extends ConsumerState<NewPlace> {
+class NewPlaceState extends ConsumerState<AddPlaceScreen> {
   final _formKey = GlobalKey<FormState>();
   var _enteredName = '';
 
@@ -43,8 +44,13 @@ class NewPlaceState extends ConsumerState<NewPlace> {
             children: [
               TextFormField(
                 maxLength: 50,
-                decoration: const InputDecoration(
-                  label: Text('Enter the name'),
+                decoration: InputDecoration(
+                  label: Text(
+                    'Enter the name',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onBackground,
+                    ),
+                  ),
                 ),
                 validator: (value) => value == null ||
                         value.isEmpty ||
@@ -55,6 +61,13 @@ class NewPlaceState extends ConsumerState<NewPlace> {
                 onSaved: (newValue) {
                   _enteredName = newValue!;
                 },
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              ImageInput(),
+              const SizedBox(
+                height: 16,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

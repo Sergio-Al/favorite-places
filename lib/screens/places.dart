@@ -1,3 +1,4 @@
+import 'package:favorite_places_sergio/widgets/places_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -5,15 +6,15 @@ import 'package:favorite_places_sergio/models/place.dart';
 import 'package:favorite_places_sergio/screens/place_item.dart';
 import 'package:favorite_places_sergio/providers/favorite_places_provider.dart';
 
-import 'package:favorite_places_sergio/screens/new_place.dart';
+import 'package:favorite_places_sergio/screens/add_place.dart';
 
-class FavoritePlacesList extends ConsumerWidget {
-  const FavoritePlacesList({super.key});
+class PlacesScreen extends ConsumerWidget {
+  const PlacesScreen({super.key});
 
   void _addNewPlace(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (ctx) => const NewPlace(),
+        builder: (ctx) => const AddPlaceScreen(),
       ),
     );
   }
@@ -32,23 +33,11 @@ class FavoritePlacesList extends ConsumerWidget {
     Widget content = const Center(
       child: Text('Nothing here'),
     );
-
-    if (favoritePlaces.isNotEmpty) {
-      content = ListView.builder(
-        itemCount: favoritePlaces.length,
-        itemBuilder: (BuildContext context, int index) {
-          return InkWell(
-            customBorder: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            onTap: () {
-              _openDetails(context, favoritePlaces[index]);
-            },
-            child: ListTile(
-              title: Text(favoritePlaces[index].name),
-            ),
-          );
-        },
+ 
+   if (favoritePlaces.isNotEmpty) {
+      content = PlacesList(
+        places: favoritePlaces,
+        openDetails: _openDetails,
       );
     }
     // TODO: implement build
