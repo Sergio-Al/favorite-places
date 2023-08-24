@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:favorite_places_sergio/models/place.dart';
 import 'package:favorite_places_sergio/providers/favorite_places_provider.dart';
 import 'package:favorite_places_sergio/widgets/image_input.dart';
@@ -17,13 +19,17 @@ class AddPlaceScreen extends ConsumerStatefulWidget {
 class NewPlaceState extends ConsumerState<AddPlaceScreen> {
   final _formKey = GlobalKey<FormState>();
   var _enteredName = '';
+  File? _selectedImage;
 
   void _addPlace() {
+    if (_selectedImage == null) return;
+    
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      final newPlace = Place(name: _enteredName);
-      ref.read(favoritePlacesProvider.notifier).addNewPlace(newPlace);
+      ref
+          .read(favoritePlacesProvider.notifier)
+          .addNewPlace(_enteredName, _selectedImage!);
 
       Navigator.of(context).pop();
     }
@@ -67,7 +73,11 @@ class NewPlaceState extends ConsumerState<AddPlaceScreen> {
               const SizedBox(
                 height: 16,
               ),
-              ImageInput(),
+              ImageInput(
+                onPickImage: (image) {
+                  _selectedImage = image;
+                },
+              ),
               const SizedBox(
                 height: 16,
               ),
