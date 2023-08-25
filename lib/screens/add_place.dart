@@ -90,9 +90,11 @@ class NewPlaceState extends ConsumerState<AddPlaceScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                    onPressed: _addPlace,
-                    child: Text('Save Data'),
-                  ),
+                      onPressed: _addPlace,
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [Icon(Icons.add), Text('Save Data')],
+                      )),
                 ],
               )
             ],
