@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:favorite_places_sergio/models/place.dart';
 import 'package:favorite_places_sergio/providers/favorite_places_provider.dart';
 import 'package:favorite_places_sergio/widgets/image_input.dart';
+import 'package:favorite_places_sergio/widgets/location_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
@@ -23,7 +24,7 @@ class NewPlaceState extends ConsumerState<AddPlaceScreen> {
 
   void _addPlace() {
     if (_selectedImage == null) return;
-    
+
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
@@ -78,6 +79,10 @@ class NewPlaceState extends ConsumerState<AddPlaceScreen> {
                   _selectedImage = image;
                 },
               ),
+              const SizedBox(
+                height: 16,
+              ),
+              LocationInput(),
               const SizedBox(
                 height: 16,
               ),
