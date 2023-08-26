@@ -7,8 +7,8 @@ import 'package:favorite_places_sergio/models/place.dart';
 class FavoritePlacesNotifier extends StateNotifier<List<Place>> {
   FavoritePlacesNotifier() : super([]);
 
-  void addNewPlace(String title, File image) {
-    final newPlace = Place(name: title, image: image);
+  void addNewPlace(String title, File image, PlaceLocation location) {
+    final newPlace = Place(name: title, image: image, location: location);
     state = [...state, newPlace];
   }
 }

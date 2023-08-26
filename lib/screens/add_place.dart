@@ -21,16 +21,19 @@ class NewPlaceState extends ConsumerState<AddPlaceScreen> {
   final _formKey = GlobalKey<FormState>();
   var _enteredName = '';
   File? _selectedImage;
+  PlaceLocation? _selectedLocation;
 
   void _addPlace() {
     if (_selectedImage == null) return;
 
     if (_formKey.currentState!.validate()) {
+      if (_selectedImage == null || _selectedLocation == null) return;
+
       _formKey.currentState!.save();
 
       ref
           .read(favoritePlacesProvider.notifier)
-          .addNewPlace(_enteredName, _selectedImage!);
+          .addNewPlace(_enteredName, _selectedImage!, _selectedLocation!);
 
       Navigator.of(context).pop();
     }
@@ -44,60 +47,66 @@ class NewPlaceState extends ConsumerState<AddPlaceScreen> {
       appBar: AppBar(
         title: const Text('Add New Place'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              TextFormField(
-                maxLength: 50,
-                decoration: InputDecoration(
-                  label: Text(
-                    'Enter the name',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onBackground,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                TextFormField(
+                  maxLength: 50,
+                  decoration: InputDecoration(
+                    label: Text(
+                      'Enter the name',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onBackground,
+                      ),
                     ),
                   ),
+                  validator: (value) => value == null ||
+                          value.isEmpty ||
+                          value.trim().length == 1 ||
+                          value.trim().length > 50
+                      ? 'Must be a valid name'
+                      : null,
+                  onSaved: (newValue) {
+                    _enteredName = newValue!;
+                  },
                 ),
-                validator: (value) => value == null ||
-                        value.isEmpty ||
-                        value.trim().length == 1 ||
-                        value.trim().length > 50
-                    ? 'Must be a valid name'
-                    : null,
-                onSaved: (newValue) {
-                  _enteredName = newValue!;
-                },
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              ImageInput(
-                onPickImage: (image) {
-                  _selectedImage = image;
-                },
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              LocationInput(),
-              const SizedBox(
-                height: 16,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                      onPressed: _addPlace,
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [Icon(Icons.add), Text('Save Data')],
-                      )),
-                ],
-              )
-            ],
+                const SizedBox(
+                  height: 16,
+                ),
+                ImageInput(
+                  onPickImage: (image) {
+                    _selectedImage = image;
+                  },
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                LocationInput(
+                  onSelectLocation: (location) {
+                    _selectedLocation = location;
+                  },
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                        onPressed: _addPlace,
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [Icon(Icons.add), Text('Save Data')],
+                        )),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),
