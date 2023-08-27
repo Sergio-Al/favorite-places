@@ -8,8 +8,23 @@ import 'package:favorite_places_sergio/providers/favorite_places_provider.dart';
 
 import 'package:favorite_places_sergio/screens/add_place.dart';
 
-class PlacesScreen extends ConsumerWidget {
+class PlacesScreen extends ConsumerStatefulWidget {
   const PlacesScreen({super.key});
+
+  @override
+  ConsumerState<PlacesScreen> createState() {
+    return _PlacesScreenState();
+  }
+}
+
+class _PlacesScreenState extends ConsumerState<PlacesScreen> {
+  late Future<void> _placesFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _placesFuture = ref.read(favoritePlacesProvider.notifier).loadPlaces();
+  }
 
   void _addNewPlace(BuildContext context) {
     Navigator.of(context).push(
@@ -28,13 +43,13 @@ class PlacesScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final favoritePlaces = ref.watch(favoritePlacesProvider);
     Widget content = const Center(
       child: Text('Nothing here'),
     );
- 
-   if (favoritePlaces.isNotEmpty) {
+
+    if (favoritePlaces.isNotEmpty) {
       content = PlacesList(
         places: favoritePlaces,
         openDetails: _openDetails,
@@ -55,7 +70,15 @@ class PlacesScreen extends ConsumerWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: content,
+        child: FutureBuilder(
+          future: _placesFuture,
+          builder: (context, snapshot) => snapshot.connectionState ==
+                  ConnectionState.waiting
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : PlacesList(places: favoritePlaces, openDetails: _openDetails),
+        ),
       ),
     );
   }
